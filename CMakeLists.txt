@@ -7,5 +7,6 @@ add_executable(FinalExam main.c
         vmcd.h
         vmcd_core.c
         vmcd_ui.c
-        vmcd_file.c)
+        vmcd_file.c
+)
 
