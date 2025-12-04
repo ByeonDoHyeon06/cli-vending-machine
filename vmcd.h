@@ -45,10 +45,13 @@ typedef struct {
 // vmcd_file.c
 int load_config(VendingMachine *vm);
 int save_log(const char *message, const VendingMachine *vm);
+int print_config_contents(void);
+int print_log_history(void);
 
 // vmcd_core.c
 void init_vm(VendingMachine *vm);
 void run_user_mode(VendingMachine *vm);
+void print_stock(const VendingMachine *vm);
 
 // vmcd_ui.c
 void clear_screen(void);

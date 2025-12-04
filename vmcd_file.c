@@ -210,6 +210,25 @@ int load_config(VendingMachine *vm) {
     return 1;
 }
 
+int print_config_contents(void) {
+    FILE *fp = fopen(CONFIG_FILE, "r");
+    if (!fp) {
+        printf("\n구성 파일(%s)이 없습니다.\n", CONFIG_FILE);
+        return 0;
+    }
+
+    print_subtitle("초기 설정 내역");
+    print_line();
+
+    char line[256];
+    while (fgets(line, sizeof(line), fp)) {
+        fputs(line, stdout);
+    }
+
+    fclose(fp);
+    return 1;
+}
+
 int save_log(const char *message, const VendingMachine *vm) {
     (void)vm; // 필요하면 vm 상태도 상세히 남길 수 있음
 
@@ -227,6 +246,25 @@ int save_log(const char *message, const VendingMachine *vm) {
             tm_now->tm_min,
             tm_now->tm_sec,
             message);
+
+    fclose(fp);
+    return 1;
+}
+
+int print_log_history(void) {
+    FILE *fp = fopen(LOG_FILE, "r");
+    if (!fp) {
+        printf("\n로그 파일(%s)이 없습니다.\n", LOG_FILE);
+        return 0;
+    }
+
+    print_subtitle("입출고 로그");
+    print_line();
+
+    char line[256];
+    while (fgets(line, sizeof(line), fp)) {
+        fputs(line, stdout);
+    }
 
     fclose(fp);
     return 1;

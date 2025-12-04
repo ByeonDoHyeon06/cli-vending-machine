@@ -1,7 +1,7 @@
 #include "vmcd.h"
 
-// 내부 유틸: 재고 출력
-static void print_stock(const VendingMachine *vm) {
+// 재고 출력
+void print_stock(const VendingMachine *vm) {
     print_subtitle("현재 재고");
 
     print_line();
