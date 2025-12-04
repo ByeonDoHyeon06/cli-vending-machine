@@ -70,7 +70,7 @@ static void run_admin_mode(VendingMachine *vm) {
 int main(void) {
     VendingMachine vm;
     init_vm(&vm);
-    load_config(&vm);  // ★ 이 줄1
+    load_config(&vm);
     int running = 1;
     while (running) {
         clear_screen();

@@ -4,7 +4,6 @@ void clear_screen(void) {
 #ifdef _WIN32
     system("cls");
 #else
-    // 터미널 클리어
     printf("\033[2J\033[H");
 #endif
 }
@@ -34,7 +33,6 @@ void loading_spinner(const char *msg, int ms) {
     printf("\r%s 완료\n", msg);
 }
 
-// [##########..........] (75%) 스타일 진행바
 void progress_bar(const char *msg, int total_steps, int delay_ms_ms) {
     const int width = 20; // # 개수
     for (int step = 0; step <= total_steps; ++step) {
@@ -52,14 +50,12 @@ void progress_bar(const char *msg, int total_steps, int delay_ms_ms) {
     putchar('\n');
 }
 
-// scanf 뒤에서도 진짜로 Enter 한 번 기다리게 만드는 버전
+
 void wait_for_enter(void) {
     int c;
 
-    // 1. 직전 scanf 등이 남겨둔 내용 비우기
     while ((c = getchar()) != '\n' && c != EOF) {}
 
-    // 2. 실제 Enter 입력 대기
     printf("\n계속하려면 Enter 키를 누르세요...");
     fflush(stdout);
     getchar();

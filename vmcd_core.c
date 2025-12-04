@@ -1,6 +1,5 @@
 #include "vmcd.h"
 
-// 재고 출력
 void print_stock(const VendingMachine *vm) {
     print_subtitle("현재 재고");
 
@@ -23,7 +22,6 @@ void print_stock(const VendingMachine *vm) {
     }
 }
 
-// 동전 재고 + 방금 넣은 동전까지 고려해서 거스름돈 계산
 static int calc_change_with_stock(const VendingMachine *vm,
                                   const int inserted_count[MAX_COINS],
                                   int change,
@@ -116,7 +114,6 @@ void run_user_mode(VendingMachine *vm) {
         return;
     }
 
-    // ===== 동전 투입 단계 =====
     clear_screen();
     print_title();
     print_subtitle("동전 투입");
@@ -177,7 +174,7 @@ void run_user_mode(VendingMachine *vm) {
     }
 
     int change = inserted_total - d->price;
-    int change_count[MAX_COINS] = {0,};  // 반드시 0으로 초기화
+    int change_count[MAX_COINS] = {0,};
 
     if (change > 0) {
         loading_spinner("거스름돈 계산 중", 700);
@@ -191,10 +188,9 @@ void run_user_mode(VendingMachine *vm) {
         }
     }
 
-    // 재고 반영
     for (int i = 0; i < vm->coin_count; ++i) {
-        vm->coins[i].stock += inserted_count[i];  // 투입된 동전
-        vm->coins[i].stock -= change_count[i];    // 거슬러준 동전
+        vm->coins[i].stock += inserted_count[i];
+        vm->coins[i].stock -= change_count[i];
     }
     d->stock--;
 

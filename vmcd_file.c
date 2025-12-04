@@ -1,7 +1,7 @@
 #include "vmcd.h"
 #include <ctype.h>   // isspace
 
-// 기본값 세팅 (config 없거나 완전 망가졌을 때)
+
 static void init_default_data(VendingMachine *vm) {
     init_vm(vm);
 
@@ -25,7 +25,6 @@ static void init_default_data(VendingMachine *vm) {
     vm->coins[2].value = 1000; vm->coins[2].stock = 5;
 }
 
-// 현재 vm 상태를 CONFIG_FILE로 저장 (새 포맷)
 static void save_config_file(const VendingMachine *vm) {
     FILE *fp = fopen(CONFIG_FILE, "w");
     if (!fp) return;
@@ -50,13 +49,13 @@ static void save_config_file(const VendingMachine *vm) {
     fclose(fp);
 }
 
-// 앞뒤 공백 제거된 포인터 반환
+
 static char* trim_left(char *s) {
     while (*s && isspace((unsigned char)*s)) s++;
     return s;
 }
 
-// config 읽기
+
 int load_config(VendingMachine *vm) {
     FILE *fp = fopen(CONFIG_FILE, "r");
     char line[256];
@@ -69,9 +68,8 @@ int load_config(VendingMachine *vm) {
         return 1;
     }
 
-    init_vm(vm);  // 깨끗하게 초기화
+    init_vm(vm);
 
-    // ===== [DRINKS] 찾기 =====
     int found_drinks = 0;
     while (fgets(line, sizeof(line), fp)) {
         char *p = trim_left(line);
@@ -91,16 +89,12 @@ int load_config(VendingMachine *vm) {
         return 1;
     }
 
-    // ===== [DRINKS] 섹션 읽기 =====
     int drink_idx = 0;
     while (fgets(line, sizeof(line), fp)) {
         char *p = trim_left(line);
         if (*p == '#' || *p == '\n' || *p == '\0') continue;
 
         if (*p == '[') {
-            // 다음 섹션([COINS]) 도달
-            // 이 줄은 나중에 다시 처리해야 하므로 파일 포인터를 되돌릴 수 없어서
-            // 간단하게 [COINS]로 간주하고 루프 탈출
             if (strncmp(p, "[COINS]", 7) != 0) {
                 printf("\n알 수 없는 섹션: %s", p);
                 fclose(fp);
@@ -109,7 +103,6 @@ int load_config(VendingMachine *vm) {
                 save_log("ADMIN init_default_config_bad_section", vm);
                 return 1;
             }
-            // [COINS] 섹션으로 넘어가기 전에 drink_count 확정
             break;
         }
 
@@ -144,10 +137,8 @@ int load_config(VendingMachine *vm) {
         return 1;
     }
 
-    // 지금 파일 포인터는 [COINS] 줄 직후 또는 그 안. 다시 한 번 [COINS] 찾기
     int found_coins = 0;
-    // 방금 읽은 줄이 [COINS]가 아닐 수도 있어서, 현재 위치부터 다시 탐색
-    fseek(fp, 0, SEEK_SET);  // 간단히 처음부터 다시 읽어서 [COINS] 찾자
+    fseek(fp, 0, SEEK_SET);
 
     while (fgets(line, sizeof(line), fp)) {
         char *p = trim_left(line);
@@ -167,12 +158,11 @@ int load_config(VendingMachine *vm) {
         return 1;
     }
 
-    // ===== [COINS] 섹션 읽기 =====
     int coin_idx = 0;
     while (fgets(line, sizeof(line), fp)) {
         char *p = trim_left(line);
         if (*p == '#' || *p == '\n' || *p == '\0') continue;
-        if (*p == '[') break; // 다음 섹션이 생긴다면 중단
+        if (*p == '[') break;
 
         if (coin_idx >= MAX_COINS) {
             printf("\n동전 종류가 MAX_COINS(%d)를 초과했습니다. 나머지는 무시합니다.\n",
@@ -230,7 +220,7 @@ int print_config_contents(void) {
 }
 
 int save_log(const char *message, const VendingMachine *vm) {
-    (void)vm; // 필요하면 vm 상태도 상세히 남길 수 있음
+    (void)vm;
 
     FILE *fp = fopen(LOG_FILE, "a");
     if (!fp) return 0;
